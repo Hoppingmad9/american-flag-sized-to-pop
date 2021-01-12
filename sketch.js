@@ -1,6 +1,10 @@
 function setup() {
 
-	scaling = 800
+	console.log(window.innerWidth/1.9)
+	console.log(window.innerHeight)
+
+	scaling = Math.min(window.innerWidth/1.9, window.innerHeight)
+	console.log(scaling)
 
 	flag_height = 1*scaling
 	flag_width = 1.9*scaling
