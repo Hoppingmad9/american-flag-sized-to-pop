@@ -82,23 +82,7 @@ function setup() {
 	[39, 'South Carolina'],
 	[45, 'Virginia']]
 
-	orig_states_total_pop = 0
-
-	for (let i = 0; i < original_states.length; i++) {
-		orig_states_total_pop += state_pops[original_states[i][0]][1]
-	}
-
-	stripe_heights = []
-
-	for (let i = 0; i < original_states.length; i++) {
-		if (i == 0) {
-			stripe_heights.push([state_pops[original_states[i][0]][1]/orig_states_total_pop*flag_height, 0])
-		} else {
-			stripe_heights.push([state_pops[original_states[i][0]][1]/orig_states_total_pop*flag_height, stripe_heights[i-1][0]+stripe_heights[i-1][1]])
-		}
-	}
-
-	star_order = 2 // 1 alphabetical, 2 population, 3 order of admittance
+	star_order = 3 // 1 alphabetical, 2 population, 3 order of admittance
 
 	if (star_order == 1) {
 		state_pops.sort(compareFirstColumn);
@@ -108,7 +92,48 @@ function setup() {
 		state_pops.sort(compareThirdColumn);
 	}
 
-	console.log(state_pops)
+	orig_states_total_pop = 0
+
+	for (let i = 0; i < state_pops.length; i++) {
+		if (state_pops[i][2] < 14) {
+			orig_states_total_pop += state_pops[i][1]
+		}
+	}
+
+	/*
+	for (let i = 0; i < original_states.length; i++) {
+		orig_states_total_pop += state_pops[original_states[i][0]][1]
+	}*/
+
+	stripe_heights = []
+
+	for (let i = 0; i < state_pops.length; i ++) {
+		if (state_pops[i][2] < 14) {
+			if (stripe_heights.length == 0) {
+				stripe_heights.push([state_pops[i][1]/orig_states_total_pop*flag_height, 0])
+			} else {
+				stripe_heights.push([state_pops[i][1]/orig_states_total_pop*flag_height, stripe_heights[stripe_heights.length-1][0]+stripe_heights[stripe_heights.length-1][1]])
+			}
+		}
+	}
+
+	normal_flag = true
+
+	if (normal_flag) {
+		stripe_heights = []
+		for (let i = 0; i < 13; i++) {
+			stripe_heights.push([flag_width/13,flag_width/13*i])
+		}
+	}
+
+	/*
+	for (let i = 0; i < original_states.length; i++) {
+		if (i == 0) {
+			stripe_heights.push([state_pops[original_states[i][0]][1]/orig_states_total_pop*flag_height, 0])
+		} else {
+			stripe_heights.push([state_pops[original_states[i][0]][1]/orig_states_total_pop*flag_height, stripe_heights[i-1][0]+stripe_heights[i-1][1]])
+		}
+	}*/
 
 	largest_pop = 0
 	smallest_pop = 9999999999999
@@ -138,6 +163,13 @@ function setup() {
 	for (let i = 0; i < state_pops.length; i++) {
 		temp_pop = Math.log(state_pops[i][1]/smallest_pop)/Math.log(10)
 		star_scalers.push(temp_pop/largest_pop*(star_scaling-smallest_star)+smallest_star)
+	}
+
+	if (normal_flag) {
+		star_scalers = []
+		for (let i = 0; i < 50; i++) {
+			star_scalers.push(1)
+		}
 	}
 
 	console.log(star_scalers)
